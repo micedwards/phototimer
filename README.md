@@ -1,9 +1,10 @@
-Timelapse for Raspberry Pi based on Alex Ellis's blog post:
-	https://blog.alexellis.io/raspberry-pi-timelapse/
+#Timelapse for Raspberry Pi based on Alex Ellis's blog post
 
-An incomplete rundown.
+Base: [https://blog.alexellis.io/raspberry-pi-timelapse/](https://blog.alexellis.io/raspberry-pi-timelapse/)
 
-Read blog for the background on why docker but check around to install 
+**An incomplete rundown.**
+
+Read above blog for the background on why docker but check around to install 
 docker as that process has changed since then. I use Ansible to configure
 up my RPi with the basic setup and docker so I rarely setup manaually.
 
@@ -35,21 +36,22 @@ arguments while the program is running.
 
 I haven't installed it directly on a Pi for a long time so this might not 
 be complete but these Python3 libraries are needed: 
-    astral 
-    pyyaml 
-    logzero
+- astral 
+- pyyaml 
+- logzero
 
 Check the program and dockerfile for more details.
 
 Configurationwise check astral documentation for location cities. 
-I try to match time zone city:
-    https://astral.readthedocs.io/en/latest/
+I try to match time zone city [https://astral.readthedocs.io/en/latest/](https://astral.readthedocs.io/en/latest/)
 
 If you have the Pi, camera, docker and config ready then:
 
+```
 docker run --name capture --volume /home/pi/image:/home/pi/image\
            --privileged --restart=always --env TZ="Australia/Sydney"\
-           --detach micedwards/phototimer:latest
+           --detach micedwards/phototimer:latest`
+```
 
 Replace the TZ environment variable with your location's timezone.
 
@@ -59,25 +61,28 @@ The dockerfile here is different to Alex's as it has been updated to use
 balenalib buster as the base image rather than resin. This lead to 
 raspistill failing so I've had to roll back the libraries containing 
 the raspistill programs to:
-   libraspberrypi-bin=1.20180328-1~nokernel1 
-   libraspberrypi0=1.20180328-1~nokernel1 
+```
+        libraspberrypi-bin=1.20180328-1~nokernel1 
+        libraspberrypi0=1.20180328-1~nokernel1
+``` 
  [as of 2020.03.01] 
 
 Debug logging is switchable via the config file. Creates logfile in base 
 path directory. 
 
 
-Files:
-+-- phototimer
+***Files:***
+```
+phototimer
     +-- config.py     ! initial configuration
     +-- config.yaml   ! localised configuration (edit on the fly)
     +-- Dockerfile    
     +-- phototimer.py
     +-- README.md
-
+```
 
 Default config.yaml:
------------------------------------------
+```
 ---
 location: "Sydney"          ! used to calculate dawn/dusk for exposure mode
 start_time: 1
@@ -96,11 +101,11 @@ brightness = 48             ! check raspistill documentation
 contrast = 3                ! check raspistill documentation
 nightSSpeed: 5700000        ! check raspistill documentation
 debugLog: False
------------------------------------------
+```
 
 
 Default configuration on boot provided by config.py:
------------------------------------------
+```
 config = {}
 config["start_time"] = 1          
 config["end_time"] = 2359         
@@ -124,49 +129,47 @@ config["contrast"] = 3
 config["nightSSpeed"] = 5700000
 
 config["debugLog"] = True
------------------------------------------
+```
 
 
 Here in case I forget the basics again...
 
-Build Pi:
+***Build Pi:**
 
-docker build -t micedwards/phototimer:{date} .
-docker push micedwards/phototimer:{date}
+`docker build -t micedwards/phototimer:{date} .`
+`docker push micedwards/phototimer:{date}`
 
 Once working:
+```
 docker image tag micedwards/phototimer:{date} micedwards/phototimer:latest
 docker push micedwards/phototimer:latest
+```
 
-
-Camera Pi:
-
+**Camera Pi:**
+```
 docker run --name capture --volume /home/pi/image:/home/pi/image\
            --privileged --restart=always --env TZ="Australia/Sydney"\
            --detach micedwards/phototimer:latest 
-
+```
 (or use the date tag if troubleshooting)
 
-
-Troubleshooting:
+**Troubleshooting:***
 
 Local logs in base directory also check:
-docker container logs capture
+`docker container logs capture`
 
 To connect to running container for debugging:
-docker exec -it capture bash
+`docker exec -it capture bash`
 
 
-Cleaning up:
+**Cleaning up:***
 
-docker container stop capture
+`docker container stop capture`
 
 Clear all pictures & logfiles from bash directory:
-sudo rm -r ~/image/20* && sudo rm -r ~/image/log*
+`sudo rm -r ~/image/20* && sudo rm -r ~/image/log*`
 
 Delete all docker logs:
-sudo find /var/lib/docker/containers/ -type f -name "*.log" -delete
+`sudo find /var/lib/docker/containers/ -type f -name "*.log" -delete`
 
-docker container start capture
-
-
+`docker container start capture`
