@@ -1,0 +1,18 @@
+---
+location: "Sydney"
+start_time: 1
+end_time: 2359
+flip_horizontal: False
+flip_vertical: False
+metering_mode: "matrix"
+shooting_mode: "night"
+base_path: "/home/pi/image"
+width: 3280
+height: 2464
+quality: 85
+time_delay: 60
+ISO: 200
+brightness = 48 
+contrast = 3
+nightSSpeed: 5700000
+debugLog: False
