@@ -1,4 +1,4 @@
-#Timelapse for Raspberry Pi based on Alex Ellis's blog post
+# Timelapse for Raspberry Pi based on Alex Ellis's blog post
 
 Base: [https://blog.alexellis.io/raspberry-pi-timelapse/](https://blog.alexellis.io/raspberry-pi-timelapse/)
 
@@ -71,7 +71,7 @@ Debug logging is switchable via the config file. Creates logfile in base
 path directory. 
 
 
-***Files:***
+**Files:**
 ```
 phototimer
     +-- config.py     ! initial configuration
@@ -134,7 +134,7 @@ config["debugLog"] = True
 
 Here in case I forget the basics again...
 
-***Build Pi:**
+**Build Pi:**
 
 `docker build -t micedwards/phototimer:{date} .`
 `docker push micedwards/phototimer:{date}`
@@ -153,7 +153,7 @@ docker run --name capture --volume /home/pi/image:/home/pi/image\
 ```
 (or use the date tag if troubleshooting)
 
-**Troubleshooting:***
+**Troubleshooting:**
 
 Local logs in base directory also check:
 `docker container logs capture`
@@ -162,7 +162,7 @@ To connect to running container for debugging:
 `docker exec -it capture bash`
 
 
-**Cleaning up:***
+**Cleaning up:**
 
 `docker container stop capture`
 
@@ -173,3 +173,4 @@ Delete all docker logs:
 `sudo find /var/lib/docker/containers/ -type f -name "*.log" -delete`
 
 `docker container start capture`
+
